@@ -1,4 +1,10 @@
-﻿using System;
+﻿//This project was created for the need of bypassing signature based detection of shellcodes in Process injection exploits
+//Disclaimer: Used for educational purposes and security testing only.
+//Author: Shaddy43
+//Designation: Cybersecurity Engineer, reverse engineer & malware developer
+
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
