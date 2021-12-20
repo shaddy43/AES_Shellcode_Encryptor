@@ -38,11 +38,18 @@ namespace AES_Encryptor
                 try
                 {
                     byte[] shellcode = File.ReadAllBytes(file_path);
+                    Console.WriteLine("Original bytes: " + ByteArrayToString(shellcode));
 
                     byte[] byte_encrypted = EncryptAES(Convert.ToBase64String(shellcode));
-                    string temp_string_encrypted = ByteArrayToString(byte_encrypted);
-                    Console.WriteLine("Encrypted Bytes: " + temp_string_encrypted);
-                    File.WriteAllText(output_file, temp_string_encrypted);
+                    string byte_string_encrypted = ByteArrayToString(byte_encrypted);
+                    Console.WriteLine("\nEncrypted Bytes: " + byte_string_encrypted);
+                    File.WriteAllText(output_file, byte_string_encrypted);
+
+                    String byte_string_decrypted = DecryptAES(byte_encrypted);
+                    Console.WriteLine("\n\n\nDecrypted String: " + byte_string_decrypted);
+                    byte[] byte_decrypted = Convert.FromBase64String(byte_string_decrypted);
+                    String display_bytes = ByteArrayToString(byte_decrypted);
+                    Console.WriteLine("\nDecrypted Bytes: " + display_bytes);
                 }
                 catch (Exception e)
                 {
@@ -116,6 +123,37 @@ namespace AES_Encryptor
             }
 
             return encrypted;
+        }
+
+        public static string DecryptAES(byte[] encrypted)
+        {
+            string decrypted = null;
+            byte[] cipher = encrypted;
+
+            using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+            {
+                aes.Key = Convert.FromBase64String(aes_key);
+                //aes.Key = aes_keyy;
+
+                //aes.IV = Convert.FromBase64String(aes_iv);
+                aes.IV = aes_iv;
+                aes.Mode = CipherMode.CBC;
+                aes.Padding = PaddingMode.PKCS7;
+
+                ICryptoTransform dec = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                using (MemoryStream ms = new MemoryStream(cipher))
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, dec, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader sr = new StreamReader(cs))
+                        {
+                            decrypted = sr.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            return decrypted;
         }
 
     }
