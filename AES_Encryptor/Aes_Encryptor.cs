@@ -46,9 +46,10 @@ namespace AES_Encryptor
                     File.WriteAllText(output_file, byte_string_encrypted);
 
                     String byte_string_decrypted = DecryptAES(byte_encrypted);
-                    Console.WriteLine("\n\n\nDecrypted String: " + byte_string_decrypted);
                     byte[] byte_decrypted = Convert.FromBase64String(byte_string_decrypted);
+                    String byte_encoded = Encoding.UTF8.GetString(byte_decrypted);
                     String display_bytes = ByteArrayToString(byte_decrypted);
+                    Console.WriteLine("\nDecrypted String: " + byte_encoded);
                     Console.WriteLine("\nDecrypted Bytes: " + display_bytes);
                 }
                 catch (Exception e)
